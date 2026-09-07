@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>عجلة الحظ والخصومات</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background-color: #f4f4f9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .wheel-container {
+      position: relative;
+      width: 320px;
+      height: 320px;
+      margin: 20px 0;
+    }
+
+    .arrow {
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+      border-top: 25px solid #ff4757;
+      z-index: 10;
+    }
+
+    #wheel {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 5px solid #333;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+    }
+
+    button {
+      background-color: #ff4757;
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 25px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: background 0.2s;
+    }
+
+    button:disabled {
+      background-color: #a4b0be;
+      cursor: not-allowed;
+    }
+
+    #message {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #2ed573;
+      text-align: center;
+      min-height: 25px;
+    }
+
+    .error {
+      color: #ff4757 !important;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>جربي حظك واحصلي على خصمك! 🎁</h1>
+
+  <div class="wheel-container">
+    <div class="arrow"></div>
+    <canvas id="wheel" width="320" height="320"></canvas>
+  </div>
+
+  <button id="spinBtn" onclick="spinWheel()">تدوير العجلة</button>
+  <div id="message"></div>
+
+  <script>
+    const canvas = document.getElementById('wheel');
+    const ctx = canvas.getContext('2d');
+    const spinBtn = document.getElementById('spinBtn');
+    const message = document.getElementById('message');
+
+    const prizes = [
+      { text: "خصم 10%", color: "#ff6b6b" },
+      { text: "خصم 20%", color: "#4ecdc4" },
+      { text: "خصم 30%", color: "#ffe66d" },
+      { text: "توصيل مجاني", color: "#1dd1a1" },
+      { text: "قطعة مجاناً", color: "#feca57" },
+      { text: "حظ أوفر", color: "#ff9ff3" }
+    ];
+
+    const numPrizes = prizes.length;
+    const arcSize = (2 * Math.PI) / numPrizes;
+    let currentRotation = 0;
+
+    function drawWheel() {
+      for (let i = 0; i < numPrizes; i++) {
+        const angle = i * arcSize;
+        ctx.beginPath();
+        ctx.fillStyle = prizes[i].color;
+        ctx.moveTo(160, 160);
+        ctx.arc(160, 160, 150, angle, angle + arcSize);
+        ctx.lineTo(160, 160);
+        ctx.fill();
+
+        ctx.save();
+        ctx.translate(160, 160);
+        ctx.rotate(angle + arcSize / 2);
+        ctx.textAlign = "right";
+        ctx.fillStyle = "#333";
+        ctx.font = "bold 14px sans-serif";
+        ctx.fillText(prizes[i].text, 130, 5);
+        ctx.restore();
+      }
+    }
+
+    function checkAvailability() {
+      const lastSpin = localStorage.getItem('lastSpinTime');
+      if (lastSpin) {
+        const now = new Date().getTime();
+        const timePassed = now - parseInt(lastSpin);
+        const twentyFourHours = 24 * 60 * 60 * 1000;
+
+        if (timePassed < twentyFourHours) {
+          const remainingTime = twentyFourHours - timePassed;
+          const hoursLeft = Math.floor(remainingTime / (1000 * 60 * 60));
+          const minutesLeft = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+
+          spinBtn.disabled = true;
+          message.classList.add('error');
+          message.innerText = `لقد جربتي حظك اليوم! حاولي مجدداً بعد ${hoursLeft} ساعة و ${minutesLeft} دقيقة.`;
+          return false;
+        }
+      }
+      return true;
+    }
+
+    function spinWheel() {
+      if (!checkAvailability()) return;
+
+      spinBtn.disabled = true;
+      localStorage.setItem('lastSpinTime', new Date().getTime().toString());
+
+      const randomIndex = Math.floor(Math.random() * numPrizes);
+      const extraRounds = 5;
+      const degreesPerPrize = 360 / numPrizes;
+
+      const targetDegree =
+        (360 - (randomIndex * degreesPerPrize) - (degreesPerPrize / 2)) +
+        (360 * extraRounds) - 90;
+
+      currentRotation += targetDegree;
+      canvas.style.transform = `rotate(${currentRotation}deg)`;
+
+      setTimeout(() => {
+        message.classList.remove('error');
+        message.innerText = `مبروك! حصلت على: (${prizes[randomIndex].text}). خذي لقطة شاشة وراسينا على الخاص!`;
+      }, 4000);
+    }
+
+    drawWheel();
+    checkAvailability();
+  </script>
+
+</body>
+</html>
