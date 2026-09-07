@@ -124,6 +124,7 @@
       font-size: 14px;
       color: white;
       box-sizing: border-box;
+      cursor: pointer;
     }
 
     .btn-insta { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
@@ -140,7 +141,7 @@
       cursor: pointer;
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
       transition: background 0.2s;
-      display: none; /* hidden until followed */
+      display: none; /* hidden until time ends */
     }
 
     .btn-spin:disabled {
@@ -213,13 +214,16 @@
       <canvas id="wheel" width="320" height="320"></canvas>
     </div>
 
+    <!-- Verification Step Box -->
     <div id="stepBox" class="step-box">
-      <div class="step-title">⚠️ لتفعيل زر العجلة، يرجى متابعة حساباتنا أولاً:</div>
-      <a href="https://instagram.com/yasa1h" id="instaLink" target="_blank" class="follow-btn btn-insta" onclick="markFollowed('insta')">
-        <i class="fab fa-instagram"></i> 1. متابعة الإنستجرام
+      <div class="step-title">⚠️ لتفعيل العجلة، اضغطي وتابعي الحسابات مع الانتظار 15 ثانية:</div>
+      
+      <a href="https://instagram.com/yasa1h" id="instaBtn" target="_blank" class="follow-btn btn-insta" onclick="startTimer('insta')">
+        <i class="fab fa-instagram"></i> <span id="instaText">1. متابعة الإنستجرام</span>
       </a>
-      <a href="https://t.me/yasa35" id="teleLink" target="_blank" class="follow-btn btn-tele" onclick="markFollowed('tele')">
-        <i class="fab fa-telegram-plane"></i> 2. الانضمام لقناة التلكرام
+
+      <a href="https://t.me/yasa35" id="teleBtn" target="_blank" class="follow-btn btn-tele" onclick="startTimer('tele')">
+        <i class="fab fa-telegram-plane"></i> <span id="teleText">2. الانضمام لقناة التلكرام</span>
       </a>
     </div>
 
@@ -245,17 +249,31 @@
     let followedInsta = false;
     let followedTele = false;
 
-    function markFollowed(type) {
-      if (type === 'insta') followedInsta = true;
-      if (type === 'tele') followedTele = true;
+    function startTimer(type) {
+      let seconds = 15; // العداد 15 ثانية
+      let textElem = (type === 'insta') ? document.getElementById('instaText') : document.getElementById('teleText');
+      let btnElem = (type === 'insta') ? document.getElementById('instaBtn') : document.getElementById('teleBtn');
+      
+      btnElem.style.pointerEvents = 'none'; // منع الضغط المتكرر أثناء العداد
 
-      if (followedInsta && followedTele) {
-        setTimeout(() => {
-          stepBox.style.display = 'none';
-          spinBtn.style.display = 'inline-block';
-          checkAvailability();
-        }, 1000);
-      }
+      const timer = setInterval(() => {
+        textElem.innerText = `جاري التحقق... انتظر (${seconds}) ثوانٍ`;
+        seconds--;
+
+        if (seconds < 0) {
+          clearInterval(timer);
+          textElem.innerText = (type === 'insta') ? "✓ تم التحقق من الانستجرام" : "✓ تم التحقق من التلكرام";
+          
+          if (type === 'insta') followedInsta = true;
+          if (type === 'tele') followedTele = true;
+
+          if (followedInsta && followedTele) {
+            stepBox.style.display = 'none';
+            spinBtn.style.display = 'inline-block';
+            checkAvailability();
+          }
+        }
+      }, 1000);
     }
 
     const prizes = [
@@ -334,7 +352,7 @@
         if(prizes[randomIndex].text === "حظ أوفر") {
            message.innerText = `حظ أوفر في المرة القادمة! شكراً لمشاركتكِ مع متجر ياسه.`;
         } else {
-           message.innerText = `مبروك! لقد ربحتي: (${prizes[randomIndex].fullMsg}). خذي لقطة شاشة وراسينا على التلكرام أو الإنستجرام!`;
+           message.innerText = `مبروك! لقد ربحتي: (${prizes[randomIndex].fullMsg}). خذي لقطة شاشة للنتيجة + لقطة شاشة تمثل متابعتكِ للبيج وراسينا على التلكرام!`;
         }
       }, 4000);
     }
