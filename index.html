@@ -3,25 +3,67 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>عجلة الحظ والخصومات</title>
+  <title>YASA BAGS FOR WOMEN - عجلة الحظ</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
     body {
       font-family: system-ui, -apple-system, sans-serif;
-      background-color: #f4f4f9;
+      background-color: #f0f0f0;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       min-height: 100vh;
       margin: 0;
-      padding: 20px;
+      padding: 0;
       box-sizing: border-box;
     }
 
-    h1 {
-      color: #333;
-      margin-bottom: 10px;
+    header {
+      width: 100%;
+      max-width: 380px;
+      background-color: white;
+      padding: 20px 15px;
+      border-radius: 0 0 10px 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       text-align: center;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+
+    .logo-container {
+      margin-bottom: 10px;
+    }
+
+    .logo-img {
+      max-width: 180px;
+      height: auto;
+      border-radius: 10px;
+      object-fit: contain;
+    }
+
+    .main-heading {
+      font-size: 18px;
+      color: #333;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .wheel-outer-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 380px;
+      background-color: white;
+      padding: 20px 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      margin-bottom: 10px;
+      box-sizing: border-box;
     }
 
     .wheel-container {
@@ -73,29 +115,104 @@
 
     #message {
       margin-top: 20px;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: bold;
       color: #2ed573;
       text-align: center;
       min-height: 25px;
+      width: 90%;
+      line-height: 1.5;
     }
 
     .error {
       color: #ff4757 !important;
     }
+
+    footer {
+      width: 100%;
+      max-width: 380px;
+      background-color: white;
+      padding: 20px 15px;
+      border-radius: 10px 10px 0 0;
+      box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-top: auto;
+      box-sizing: border-box;
+    }
+
+    .contact-heading {
+      font-size: 16px;
+      color: #333;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .contact-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: #333;
+      font-size: 13px;
+      background-color: #f9f9f9;
+      padding: 8px 12px;
+      border-radius: 20px;
+      border: 1px solid #eee;
+    }
+
+    .contact-link i {
+      font-size: 16px;
+      margin-left: 6px;
+    }
+
+    .telegram-icon i { color: #0088cc; }
+    .instagram-icon i { color: #e4405f; }
   </style>
 </head>
 <body>
 
-  <h1>جربي حظك واحصلي على خصمك! 🎁</h1>
+  <!-- Header Section with Direct PNG Image Logo -->
+  <header>
+    <div class="logo-container">
+      <img src="logo.png" alt="متجر ياسه" class="logo-img">
+    </div>
+    <div class="main-heading">متجر ياسه - جربي حظكِ واحصلي على خصمكِ! 🎁</div>
+  </header>
 
-  <div class="wheel-container">
-    <div class="arrow"></div>
-    <canvas id="wheel" width="320" height="320"></canvas>
+  <!-- Spin Wheel Section -->
+  <div class="wheel-outer-container">
+    <div class="wheel-container">
+      <div class="arrow"></div>
+      <canvas id="wheel" width="320" height="320"></canvas>
+    </div>
+    <button id="spinBtn" onclick="spinWheel()">تدوير العجلة</button>
+    <div id="message"></div>
   </div>
 
-  <button id="spinBtn" onclick="spinWheel()">تدوير العجلة</button>
-  <div id="message"></div>
+  <!-- Footer Section -->
+  <footer>
+    <div class="contact-heading">توصلي معنا:</div>
+    <div class="contact-links">
+      <a href="https://t.me/yasa35" class="contact-link telegram-icon" target="_blank">
+        <i class="fab fa-telegram-plane"></i> @yasa35
+      </a>
+      <a href="https://t.me/yasa1h" class="contact-link telegram-icon" target="_blank">
+        <i class="fab fa-telegram-plane"></i> @yasa1h
+      </a>
+      <a href="https://instagram.com/yasa1h" class="contact-link instagram-icon" target="_blank">
+        <i class="fab fa-instagram"></i> @yasa1h
+      </a>
+    </div>
+  </footer>
 
   <script>
     const canvas = document.getElementById('wheel');
@@ -103,13 +220,15 @@
     const spinBtn = document.getElementById('spinBtn');
     const message = document.getElementById('message');
 
+    // خيارات الجوائز
     const prizes = [
-      { text: "خصم 10%", color: "#ff6b6b" },
-      { text: "خصم 20%", color: "#4ecdc4" },
-      { text: "خصم 30%", color: "#ffe66d" },
-      { text: "توصيل مجاني", color: "#1dd1a1" },
-      { text: "قطعة مجاناً", color: "#feca57" },
-      { text: "حظ أوفر", color: "#ff9ff3" }
+      { text: "توصيل مجاني", color: "#1dd1a1", textColor: "#333", fullMsg: "توصيل مجاني" },
+      { text: "خصم 10%", color: "#ff6b6b", textColor: "#fff", fullMsg: "خصم 10%" },
+      { text: "قطعة مجاناً عند قطعتين", color: "#ff9f43", textColor: "#fff", fullMsg: "قطعة مجاناً عند شراء قطعتين" },
+      { text: "حظ أوفر", color: "#ff9ff3", textColor: "#333", fullMsg: "حظ أوفر" },
+      { text: "خصم 30%", color: "#ffe66d", textColor: "#333", fullMsg: "خصم 30%" },
+      { text: "خصم 20%", color: "#4ecdc4", textColor: "#fff", fullMsg: "خصم 20%" },
+      { text: "قطعة مجاناً", color: "#feca57", textColor: "#333", fullMsg: "قطعة مجاناً" }
     ];
 
     const numPrizes = prizes.length;
@@ -130,9 +249,9 @@
         ctx.translate(160, 160);
         ctx.rotate(angle + arcSize / 2);
         ctx.textAlign = "right";
-        ctx.fillStyle = "#333";
-        ctx.font = "bold 14px sans-serif";
-        ctx.fillText(prizes[i].text, 130, 5);
+        ctx.fillStyle = prizes[i].textColor;
+        ctx.font = "bold 12px sans-serif";
+        ctx.fillText(prizes[i].text, 140, 4);
         ctx.restore();
       }
     }
@@ -155,6 +274,7 @@
           return false;
         }
       }
+      spinBtn.disabled = false;
       return true;
     }
 
@@ -167,17 +287,19 @@
       const randomIndex = Math.floor(Math.random() * numPrizes);
       const extraRounds = 5;
       const degreesPerPrize = 360 / numPrizes;
-
-      const targetDegree =
-        (360 - (randomIndex * degreesPerPrize) - (degreesPerPrize / 2)) +
-        (360 * extraRounds) - 90;
+      
+      const targetDegree = (360 - (randomIndex * degreesPerPrize) - (degreesPerPrize / 2)) + (360 * extraRounds) - 90;
 
       currentRotation += targetDegree;
       canvas.style.transform = `rotate(${currentRotation}deg)`;
 
       setTimeout(() => {
         message.classList.remove('error');
-        message.innerText = `مبروك! حصلت على: (${prizes[randomIndex].text}). خذي لقطة شاشة وراسينا على الخاص!`;
+        if(prizes[randomIndex].text === "حظ أوفر") {
+           message.innerText = `حظ أوفر في المرة القادمة! شكراً لمشاركتكِ مع متجر ياسه.`;
+        } else {
+           message.innerText = `مبروك! لقد ربحتي: (${prizes[randomIndex].fullMsg}). خذي لقطة شاشة وراسينا على التلكرام أو الإنستجرام!`;
+        }
       }, 4000);
     }
 
