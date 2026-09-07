@@ -34,10 +34,6 @@
       box-sizing: border-box;
     }
 
-    .logo-container {
-      margin-bottom: 10px;
-    }
-
     .logo-img {
       max-width: 180px;
       height: auto;
@@ -95,7 +91,45 @@
       transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
     }
 
-    button {
+    /* Step Verification Box */
+    .step-box {
+      width: 100%;
+      background: #fff8f8;
+      border: 1px dashed #ff4757;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      margin-bottom: 15px;
+      box-sizing: border-box;
+    }
+
+    .step-title {
+      font-size: 14px;
+      font-weight: bold;
+      color: #d63031;
+      margin-bottom: 10px;
+    }
+
+    .follow-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 10px;
+      margin: 6px 0;
+      border-radius: 20px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 14px;
+      color: white;
+      box-sizing: border-box;
+    }
+
+    .btn-insta { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+    .btn-tele { background: #0088cc; }
+
+    .btn-spin {
       background-color: #ff4757;
       color: white;
       border: none;
@@ -106,16 +140,17 @@
       cursor: pointer;
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
       transition: background 0.2s;
+      display: none; /* hidden until followed */
     }
 
-    button:disabled {
+    .btn-spin:disabled {
       background-color: #a4b0be;
       cursor: not-allowed;
     }
 
     #message {
-      margin-top: 20px;
-      font-size: 16px;
+      margin-top: 15px;
+      font-size: 15px;
       font-weight: bold;
       color: #2ed573;
       text-align: center;
@@ -124,15 +159,13 @@
       line-height: 1.5;
     }
 
-    .error {
-      color: #ff4757 !important;
-    }
+    .error { color: #ff4757 !important; }
 
     footer {
       width: 100%;
       max-width: 380px;
       background-color: white;
-      padding: 20px 15px;
+      padding: 15px;
       border-radius: 10px 10px 0 0;
       box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
       display: flex;
@@ -141,13 +174,6 @@
       text-align: center;
       margin-top: auto;
       box-sizing: border-box;
-    }
-
-    .contact-heading {
-      font-size: 16px;
-      color: #333;
-      font-weight: bold;
-      margin-bottom: 15px;
     }
 
     .contact-links {
@@ -162,25 +188,18 @@
       align-items: center;
       text-decoration: none;
       color: #333;
-      font-size: 13px;
+      font-size: 12px;
       background-color: #f9f9f9;
-      padding: 8px 12px;
-      border-radius: 20px;
+      padding: 6px 10px;
+      border-radius: 15px;
       border: 1px solid #eee;
     }
 
-    .contact-link i {
-      font-size: 16px;
-      margin-left: 6px;
-    }
-
-    .telegram-icon i { color: #0088cc; }
-    .instagram-icon i { color: #e4405f; }
+    .contact-link i { margin-left: 5px; }
   </style>
 </head>
 <body>
 
-  <!-- Header Section with Direct PNG Image Logo -->
   <header>
     <div class="logo-container">
       <img src="logo.png" alt="متجر ياسه" class="logo-img">
@@ -188,29 +207,31 @@
     <div class="main-heading">متجر ياسه - جربي حظكِ واحصلي على خصمكِ! 🎁</div>
   </header>
 
-  <!-- Spin Wheel Section -->
   <div class="wheel-outer-container">
     <div class="wheel-container">
       <div class="arrow"></div>
       <canvas id="wheel" width="320" height="320"></canvas>
     </div>
-    <button id="spinBtn" onclick="spinWheel()">تدوير العجلة</button>
+
+    <div id="stepBox" class="step-box">
+      <div class="step-title">⚠️ لتفعيل زر العجلة، يرجى متابعة حساباتنا أولاً:</div>
+      <a href="https://instagram.com/yasa1h" id="instaLink" target="_blank" class="follow-btn btn-insta" onclick="markFollowed('insta')">
+        <i class="fab fa-instagram"></i> 1. متابعة الإنستجرام
+      </a>
+      <a href="https://t.me/yasa35" id="teleLink" target="_blank" class="follow-btn btn-tele" onclick="markFollowed('tele')">
+        <i class="fab fa-telegram-plane"></i> 2. الانضمام لقناة التلكرام
+      </a>
+    </div>
+
+    <button id="spinBtn" class="btn-spin" onclick="spinWheel()">تدوير العجلة</button>
     <div id="message"></div>
   </div>
 
-  <!-- Footer Section -->
   <footer>
-    <div class="contact-heading">توصلي معنا:</div>
     <div class="contact-links">
-      <a href="https://t.me/yasa35" class="contact-link telegram-icon" target="_blank">
-        <i class="fab fa-telegram-plane"></i> @yasa35
-      </a>
-      <a href="https://t.me/yasa1h" class="contact-link telegram-icon" target="_blank">
-        <i class="fab fa-telegram-plane"></i> @yasa1h
-      </a>
-      <a href="https://instagram.com/yasa1h" class="contact-link instagram-icon" target="_blank">
-        <i class="fab fa-instagram"></i> @yasa1h
-      </a>
+      <a href="https://t.me/yasa1h" class="contact-link" target="_blank"><i class="fab fa-telegram-plane"></i> حجز تلكرام</a>
+      <a href="https://t.me/yasa35" class="contact-link" target="_blank"><i class="fab fa-telegram-plane"></i> القناة</a>
+      <a href="https://instagram.com/yasa1h" class="contact-link" target="_blank"><i class="fab fa-instagram"></i> انستجرام</a>
     </div>
   </footer>
 
@@ -218,9 +239,25 @@
     const canvas = document.getElementById('wheel');
     const ctx = canvas.getContext('2d');
     const spinBtn = document.getElementById('spinBtn');
+    const stepBox = document.getElementById('stepBox');
     const message = document.getElementById('message');
 
-    // خيارات الجوائز
+    let followedInsta = false;
+    let followedTele = false;
+
+    function markFollowed(type) {
+      if (type === 'insta') followedInsta = true;
+      if (type === 'tele') followedTele = true;
+
+      if (followedInsta && followedTele) {
+        setTimeout(() => {
+          stepBox.style.display = 'none';
+          spinBtn.style.display = 'inline-block';
+          checkAvailability();
+        }, 1000);
+      }
+    }
+
     const prizes = [
       { text: "توصيل مجاني", color: "#1dd1a1", textColor: "#333", fullMsg: "توصيل مجاني" },
       { text: "خصم 10%", color: "#ff6b6b", textColor: "#fff", fullMsg: "خصم 10%" },
@@ -287,7 +324,6 @@
       const randomIndex = Math.floor(Math.random() * numPrizes);
       const extraRounds = 5;
       const degreesPerPrize = 360 / numPrizes;
-      
       const targetDegree = (360 - (randomIndex * degreesPerPrize) - (degreesPerPrize / 2)) + (360 * extraRounds) - 90;
 
       currentRotation += targetDegree;
@@ -304,8 +340,6 @@
     }
 
     drawWheel();
-    checkAvailability();
   </script>
-
 </body>
 </html>
