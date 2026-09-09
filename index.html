@@ -283,6 +283,7 @@
       { text: "حظ أوفر", color: "#ff9ff3", textColor: "#333", fullMsg: "حظ أوفر" },
       { text: "خصم 30%", color: "#ffe66d", textColor: "#333", fullMsg: "خصم 30%" },
       { text: "خصم 20%", color: "#4ecdc4", textColor: "#fff", fullMsg: "خصم 20%" },
+      { text: "5 حقائب بـ 38 ألف", color: "#54a0ff", textColor: "#fff", fullMsg: "عرض 5 حقائب بسعر 38 ألف فقط" },
       { text: "قطعة مجاناً", color: "#feca57", textColor: "#333", fullMsg: "قطعة مجاناً" }
     ];
 
@@ -305,7 +306,7 @@
         ctx.rotate(angle + arcSize / 2);
         ctx.textAlign = "right";
         ctx.fillStyle = prizes[i].textColor;
-        ctx.font = "bold 12px sans-serif";
+        ctx.font = "bold 11px sans-serif";
         ctx.fillText(prizes[i].text, 140, 4);
         ctx.restore();
       }
@@ -339,7 +340,28 @@
       spinBtn.disabled = true;
       localStorage.setItem('lastSpinTime', new Date().getTime().toString());
 
-      const randomIndex = Math.floor(Math.random() * numPrizes);
+      // اختيار الشريحة الفائزة بناءً على نظام الأوزان (نسبة 40% لخيار 5 حقائب بـ 38 ألف)
+      const rand = Math.random() * 100;
+      let randomIndex = 0;
+
+      if (rand < 40) {
+        randomIndex = 6; // "5 حقائب بـ 38 ألف" بنسبة 40%
+      } else if (rand < 50) {
+        randomIndex = 0; // توصيل مجاني (10%)
+      } else if (rand < 60) {
+        randomIndex = 1; // خصم 10% (10%)
+      } else if (rand < 70) {
+        randomIndex = 2; // قطعة مجاناً عند قطعتين (10%)
+      } else if (rand < 80) {
+        randomIndex = 3; // حظ أوفر (10%)
+      } else if (rand < 88) {
+        randomIndex = 4; // خصم 30% (8%)
+      } else if (rand < 95) {
+        randomIndex = 5; // خصم 20% (7%)
+      } else {
+        randomIndex = 7; // قطعة مجاناً (5%)
+      }
+
       const extraRounds = 5;
       const degreesPerPrize = 360 / numPrizes;
       const targetDegree = (360 - (randomIndex * degreesPerPrize) - (degreesPerPrize / 2)) + (360 * extraRounds) - 90;
